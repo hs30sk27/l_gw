@@ -111,6 +111,24 @@ int32_t RBI_DeInit(void)
 int32_t RBI_ConfigRFSwitch(RBI_Switch_TypeDef Config)
 {
   /* USER CODE BEGIN RBI_ConfigRFSwitch_1 */
+	switch (Config) {
+	case RBI_SWITCH_RFO_HP:
+	case RBI_SWITCH_RFO_LP:
+		/* E77 모듈 회로도에 맞춰 수정 필요 */
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);   // 예: TX Enable
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET); // 예: RX Disable
+		break;
+
+	case RBI_SWITCH_RX:
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); // 예: TX Disable
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);   // 예: RX Enable
+		break;
+
+	default: // RBI_SWITCH_OFF
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+		break;
+	}
 
   /* USER CODE END RBI_ConfigRFSwitch_1 */
 #if defined(USE_BSP_DRIVER)
